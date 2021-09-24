@@ -1,11 +1,10 @@
-from ..config.contents import opted_in_successfully, opted_in_failed
-from ..entities.user import User
-from ..repositories.groupRepository import GroupRepository
-from .handlerInterface import HandlerInterface
+from config.contents import opted_in_successfully, opted_in_failed
+from repositories.relationRepository import RelationRepository
+from database.databaseClient import DatabaseClient
+from handlers.handlerInterface import HandlerInterface
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
-
 
 class InHandler(HandlerInterface):
     botHandler: CommandHandler
@@ -18,18 +17,19 @@ class InHandler(HandlerInterface):
         )
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        groupRepository = GroupRepository()
-        group = groupRepository.get(update.effective_chat.id)
-        user = User(update.effective_user.id, update.effective_user.username)
+        personId = update.effective_user.id
+        chatId = update.effective_chat.id
+        username = update.effective_user.username
 
-        if group.hasUser(user):
-            update.message.reply_markdown_v2(text=opted_in_failed)
+        relationRepository = RelationRepository()
+        relation = relationRepository.get(chatId, personId)
+
+        if relation:
+            self.reply(update, opted_in_failed)
             return
-
-        group.addUser(user)
-        groupRepository.save(group)
-
-        update.message.reply_markdown_v2(text=opted_in_successfully)
+        
+        relationRepository.save(chatId, personId, username)
+        self.reply(update, opted_in_successfully)
 
     def getBotHandler(self) -> CommandHandler:
         return self.botHandler

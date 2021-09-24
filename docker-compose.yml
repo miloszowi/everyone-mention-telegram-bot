@@ -1,0 +1,37 @@
+version: "3.6"
+
+services:
+
+  database:
+    image: mongo:4.0.8
+    restart: unless-stopped
+    env_file:
+      - ./docker/config/database/database.env
+    volumes: 
+      - db-data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - web
+
+  app:
+    build: .
+    command: python app.py
+    env_file:
+      - ./docker/config/app/app.env
+    volumes:
+      - ./src:/src
+    ports:
+      - 9000:9000
+    depends_on:
+      - database
+    networks:
+      - web
+    restart: on-failure
+
+networks:
+  web:
+    driver: bridge
+  
+volumes:
+  db-data:

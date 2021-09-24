@@ -5,10 +5,8 @@ load_dotenv()
 
 bot_token = os.environ['bot_token']
 
-firebaseConfig = {
-    "apiKey": os.environ['firebase_apiKey'],
-    "authDomain": os.environ['firebase_authDomain'],
-    "databaseURL": os.environ['firebase_databaseURL'],
-    "projectId": os.environ['firebase_projectId'],
-    "storageBucket": os.environ['firebase_storageBucket'],
-}
+MONGODB_DATABASE=os.environ['MONGODB_DATABASE']
+MONGODB_USERNAME=os.environ['MONGODB_USERNAME']
+MONGODB_PASSWORD=os.environ['MONGODB_PASSWORD']
+MONGODB_HOSTNAME=os.environ['MONGODB_HOSTNAME']
+MONGODB_PORT=os.environ['MONGODB_PORT']

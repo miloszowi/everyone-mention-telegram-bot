@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+[ -z "$1" ] && printf "\nPlease specify service name (ex. app)\n\n" && exit
+
+docker-compose logs -f "$@"

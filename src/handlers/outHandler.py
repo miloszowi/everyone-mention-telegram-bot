@@ -1,10 +1,10 @@
-from ..config.contents import opted_off_successfully, opted_off_failed
-from ..entities.user import User
-from ..repositories.groupRepository import GroupRepository
-from .handlerInterface import HandlerInterface
+from config.contents import opted_off_successfully, opted_off_failed
+from handlers.handlerInterface import HandlerInterface
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
+
+from repositories.relationRepository import RelationRepository
 
 
 class OutHandler(HandlerInterface):
@@ -18,18 +18,18 @@ class OutHandler(HandlerInterface):
         )
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        groupRepository = GroupRepository()
-        group = groupRepository.get(update.effective_chat.id)
-        user = User(update.effective_user.id, update.effective_user.username)
+        personId = update.effective_user.id
+        chatId = update.effective_chat.id
 
-        if group.hasUser(user):
-            group.removeUser(user)
-            groupRepository.save(group)
-            
-            update.message.reply_markdown_v2(text=opted_off_successfully)
+        relationRepository = RelationRepository()
+        relation = relationRepository.get(chatId, personId)
+        
+        if not relation:
+            self.reply(update, opted_off_failed)
             return
-
-        update.message.reply_markdown_v2(text=opted_off_failed)
+        
+        relationRepository.remove(relation)
+        self.reply(update, opted_off_successfully)
 
     def getBotHandler(self) -> CommandHandler:
         return self.botHandler
