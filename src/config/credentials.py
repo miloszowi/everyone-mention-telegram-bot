@@ -1,9 +1,10 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
-bot_token = os.environ['bot_token']
+BOT_TOKEN = os.environ['BOT_TOKEN']
 
 MONGODB_DATABASE=os.environ['MONGODB_DATABASE']
 MONGODB_USERNAME=os.environ['MONGODB_USERNAME']

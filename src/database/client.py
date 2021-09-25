@@ -1,10 +1,13 @@
-from pymongo.errors import ServerSelectionTimeoutError
-from config.credentials import MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_DATABASE, MONGODB_HOSTNAME, MONGODB_PORT
-from pymongo import MongoClient
-from pymongo.database import Database
 from urllib.parse import quote_plus
 
-class DatabaseClient():
+from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
+                                MONGODB_PASSWORD, MONGODB_PORT,
+                                MONGODB_USERNAME)
+from pymongo import MongoClient
+from pymongo.database import Database
+
+
+class Client():
     mongoClient: MongoClient
     database: Database
 
@@ -17,14 +20,17 @@ class DatabaseClient():
         self.mongoClient = MongoClient(uri)
         self.database = self.mongoClient[MONGODB_DATABASE]
 
-    def insert(self, collection: str, data: dict) -> None:
+    def insertOne(self, collection: str, data: dict) -> None:
         self.database.get_collection(collection).insert_one(data)
-
-    def find(self, collection: str, query: dict) -> dict:
-        return self.database.get_collection(collection).find(query)
 
     def findOne(self, collection: str, query: dict) -> dict:
         return self.database.get_collection(collection).find_one(query)
 
-    def remove(self, collection: str, data: dict) -> None:
-        self.database.get_collection(collection).remove(data)
+    def findMany(self, collection: str, filter: dict) -> dict:
+        return self.database.get_collection(collection).find(filter)
+
+    def updateOne(self, collection: str, filter: dict, data: dict) -> None:
+        self.database.get_collection(collection).update_one(
+            filter, 
+            { "$set" : data }
+        )
