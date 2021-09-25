@@ -13,6 +13,7 @@ from handler.abstractHandler import AbstractHandler
 class MentionHandler(AbstractHandler):
     botHandler: CommandHandler
     userRepository: UserRepository
+    silent: str = 'silent'
 
     def __init__(self) -> None:
         self.botHandler = CommandHandler('everyone', self.handle)
@@ -23,7 +24,7 @@ class MentionHandler(AbstractHandler):
         users = self.userRepository.getAllForChat(updateData.getChatId())
         
         if users:
-            self.reply(update, self.buildMentionMessage(users))
+            self.reply(update, self.buildMentionMessage(users, self.isSilent(context)))
             return
 
         self.reply(update, mention_failed)
@@ -31,10 +32,16 @@ class MentionHandler(AbstractHandler):
     def getBotHandler(self) -> CommandHandler:
         return self.botHandler
 
-    def buildMentionMessage(self, users: Iterable[User]) -> str:
+    def buildMentionMessage(self, users: Iterable[User], silent: bool = False) -> str:
         result = ''
 
         for user in users:
-            result += f'*[{user.getUsername()}](tg://user?id={user.getUserId()})* '
+            if not silent:
+                result += f'*[{user.getUsername()}](tg://user?id={user.getUserId()})* '
+            else:
+                result += f'*{user.getUsername()}\({user.getUserId()}\)*\n'
 
         return result
+
+    def isSilent(self, context: CallbackContext) -> bool:
+        return context.args and context.args[0] == self.silent

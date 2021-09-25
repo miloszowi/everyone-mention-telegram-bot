@@ -27,7 +27,6 @@ class UpdateData():
     def createFromUpdate(update: Update) -> UpdateData:
         userId = str(update.effective_user.id)
         chatId = str(update.effective_chat.id)
-        chatId = "-284685928"
         username = update.effective_user.username or update.effective_user.first_name
 
         if not username:

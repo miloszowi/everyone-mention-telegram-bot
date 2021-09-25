@@ -76,6 +76,11 @@ If you haven't opted-in before, alternative reply will be displayed.
 ![out command when someone did not opt in example](docs/out_command_did_not_opt_in_before.png)
 
 ### `/everyone`
+You can also type 
+```
+/everyone silent
+```
+to list users that opted-in for everyone-mentions but without tagging them.
 Will mention everyone that opted-in for everyone-mentions separated by spaces.
 
 If user does not have nickname, it will first try to assign his firstname, then random firstname from `names` python library
