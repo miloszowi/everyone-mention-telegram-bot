@@ -1,4 +1,6 @@
 from ..config.contents import mention_failed
+from ..entities.group import Group
+from ..entities.user import User
 from ..firebaseProxy import FirebaseProxy
 from ..repositories.groupRepository import GroupRepository
 from .handlerInterface import HandlerInterface
@@ -30,13 +32,11 @@ class MentionHandler(HandlerInterface):
     def getCommandName(self) -> str:
         return self.commandName
 
-    def buildMentionMessage(self, usersData: dict) -> str:
+    def buildMentionMessage(self, group: Group) -> str:
         result = ''
 
-        for userData in usersData:
-            userId = str(userData.get(FirebaseProxy.id_index))
-            username = userData.get(FirebaseProxy.name_index) or userId
-
-            result += "*[%s](tg://user?id=%s)* " % (username, userId)
+        for user in group.getUsers():
+            username = user.getUsername() or user.getId()
+            result +=  f'*[{username}](tg://user?id={user.getId()})* '
 
         return result or mention_failed

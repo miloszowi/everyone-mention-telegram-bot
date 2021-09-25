@@ -1,6 +1,6 @@
 from ..config.contents import opted_in_successfully, opted_in_failed
-from ..repositories.userRepository import UserRepository
-from ..firebaseProxy import FirebaseProxy
+from ..entities.user import User
+from ..repositories.groupRepository import GroupRepository
 from .handlerInterface import HandlerInterface
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
@@ -18,18 +18,17 @@ class InHandler(HandlerInterface):
         )
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        groupId = update.effective_chat.id
-        userData = {
-            FirebaseProxy.id_index: update.effective_user.id,
-            FirebaseProxy.name_index: update.effective_user.username
-        }
-        userRepository = UserRepository()
+        groupRepository = GroupRepository()
+        group = groupRepository.get(update.effective_chat.id)
+        user = User(update.effective_user.id, update.effective_user.username)
 
-        if userRepository.isPresentInGroup(userData.get(FirebaseProxy.id_index), groupId):
+        if group.hasUser(user):
             update.message.reply_markdown_v2(text=opted_in_failed)
             return
 
-        userRepository.addForGroup(userData, groupId)
+        group.addUser(user)
+        groupRepository.save(group)
+
         update.message.reply_markdown_v2(text=opted_in_successfully)
 
     def getBotHandler(self) -> CommandHandler:
