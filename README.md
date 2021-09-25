@@ -33,8 +33,6 @@ cp .env.local .env
 and then fulfill copied `.env` file with required values
 - `bot_token` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
 - `firebase_*`  - all of those values you can find in firebase console
-- `app_url` - your app url for retrieving webhooks
-- `PORT` - port for your app
 
 ### Commands
 #### `/in`
