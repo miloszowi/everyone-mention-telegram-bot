@@ -16,3 +16,6 @@ class HandlerInterface:
 
     @abstractmethod
     def getCommandName(self) -> str: raise Exception('getCommandName method is not implemented')
+
+    def reply(self, update: Update, message: str) -> None:
+        update.effective_message.reply_markdown_v2(text=message)

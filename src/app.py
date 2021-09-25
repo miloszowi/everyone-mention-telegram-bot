@@ -1,9 +1,8 @@
-from .config.credentials import bot_token
-from .config.handlers import handlers
-from .handlers.handlerInterface import HandlerInterface
+from config.credentials import bot_token
+from config.handlers import handlers
+from handlers.handlerInterface import HandlerInterface
 from telegram.ext.dispatcher import Dispatcher
 from telegram.ext import Updater
-
 
 class App:
     updater: Updater
@@ -14,6 +13,7 @@ class App:
 
     def run(self) -> None:
         self.registerHandlers()
+        
         self.updater.start_polling()
         self.updater.idle()
 
@@ -23,3 +23,9 @@ class App:
                 raise Exception('Invalid list of handlers provided. Handler must implement HandlerInterface')
 
             self.updater.dispatcher.add_handler(handler.getBotHandler())
+
+
+if __name__ == "__main__":
+    app = App()
+
+    app.run()

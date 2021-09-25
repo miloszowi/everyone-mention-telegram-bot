@@ -26,14 +26,28 @@ python entrypoint.py
 - `python` with version specified in `runtime.txt`
 - `pip` with version `20.0.2`
 
-#### Env file
+#### Env files
+First, copy env files for database and app containers
 ```bash
-cp .env.local .env
+cp docker/config/app/app.dist.env docker/config/app/app.env
+cp docker/config/database/database.dist.env docker/config/app/app.env
 ```
-and then fulfill copied `.env` file with required values
-- `bot_token` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
-- `firebase_*`  - all of those values you can find in firebase console
+and then fulfill copied `.env` files with required values
 
+app.env
+- `bot_token` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
+- `MONGODB_DATABASE` - MongoDB database name
+- `MONGODB_USERNAME` - MongoDB username
+- `MONGODB_PASSWORD` - MongoDB password
+- `MONGODB_HOSTNAME` - MongoDB host (default `database` - container name)
+- `MONGODB_PORT` - MongoDB port (default `port` - given in docker-compose configuration)
+
+database.env
+- `MONGO_INITDB_ROOT_USERNAME` - conf from `app.env`
+- `MONGO_INITDB_ROOT_PASSWORD` - conf from `app.env`
+- `MONGO_INITDB_DATABASE` - conf from `app.env`
+- `MONGODB_DATA_DIR` - directory to store MongoDB documents (inside a container)
+- `MONDODB_LOG_DIR` - log file 
 ### Commands
 #### `/in`
 Will sign you in for everyone-mentions.
@@ -56,7 +70,7 @@ If you haven't opted-in before, alternative reply will be displayed.
 #### `/everone`
 Will mention everyone that opted-in for everyone-mentions separated by spaces.
 
-If user does not contain nickname, his ID will be present instead of nickname.
+If user does not have nickname, it will assign random name from `names` python library to his ID
 
 ![everybody command example](docs/everyone_command.png)
 
