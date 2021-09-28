@@ -22,10 +22,17 @@ class UpdateData():
         chat_id = str(update.effective_chat.id)
         
         if context.args and context.args[0]:
-            if not context.args[0].isalpha() or context.args[0] == Group.default_name:
-                raise InvalidArgumentException(re.escape(f'Group name must contain only letters and can not be `{Group.default_name}`.'))
-            else:
-                chat_id += f'~{context.args[0]}'.lower()
+            group_name = str(context.args[0])
+            if not context.args[0].isalpha():
+                raise InvalidArgumentException(re.escape('Group name must contain only letters.'))
+
+            if context.args[0] == Group.default_name:
+                raise InvalidArgumentException(re.escape(f'Group can not be `{Group.default_name}`.'))
+
+            if len(context.args[0]) > 20:
+                raise InvalidArgumentException(re.escape(f'Group name length can not be greater than 20.'))
+
+            chat_id += f'~{context.args[0]}'.lower()
             
 
         user_id = str(update.effective_user.id)
