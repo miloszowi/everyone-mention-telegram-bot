@@ -9,30 +9,30 @@ from handler.abstractHandler import AbstractHandler
 
 
 class InHandler(AbstractHandler):
-    botHandler: CommandHandler
-    userRepository: UserRepository
+    bot_handler: CommandHandler
+    user_repository: UserRepository
 
     def __init__(self) -> None:
-        self.botHandler = CommandHandler('in', self.handle)
-        self.userRepository = UserRepository()
+        self.bot_handler = CommandHandler('in', self.handle)
+        self.user_repository = UserRepository()
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        updateData = self.getUpdateData(update)
+        update_data = self.get_update_data(update)
 
         try:
-            user = self.userRepository.getById(updateData.getUserId())
+            user = self.user_repository.get_by_id(update_data.user_id)
 
-            if user.isInChat(updateData.getChatId()):
+            if user.is_in_chat(update_data.chat_id):
                 self.reply(update, opted_in_failed)
                 return
 
-            user.addToChat(updateData.getChatId())
-            self.userRepository.save(user)
+            user.add_to_chat(update_data.chat_id)
+            self.user_repository.save(user)
             
         except NotFoundException:
-            self.userRepository.saveByUpdateData(updateData)
+            self.user_repository.save_by_update_data(update_data)
 
         self.reply(update, opted_in)
 
-    def getBotHandler(self) -> CommandHandler:
-        return self.botHandler
+    def get_bot_handler(self) -> CommandHandler:
+        return self.bot_handler

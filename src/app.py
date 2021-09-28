@@ -14,15 +14,15 @@ class App:
         self.updater = Updater(BOT_TOKEN)
 
     def run(self) -> None:
-        self.registerHandlers()
+        self.register_handlers()
         
         self.updater.start_polling()
         self.updater.idle()
 
-    def registerHandlers(self) -> None:
+    def register_handlers(self) -> None:
         for handler in AbstractHandler.__subclasses__():
             self.updater.dispatcher.add_handler(
-                handler().getBotHandler()
+                handler().get_bot_handler()
             )
 
 

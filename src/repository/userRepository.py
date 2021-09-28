@@ -12,11 +12,11 @@ class UserRepository():
     def __init__(self) -> None:
         self.client = Client()
 
-    def getById(self, id: str) -> User:
-        user = self.client.findOne(
+    def get_by_id(self, id: str) -> User:
+        user = self.client.find_one(
             User.collection,
             {
-                User.idIndex: id
+                User.id_index: id
             }
         )
 
@@ -24,41 +24,41 @@ class UserRepository():
             raise NotFoundException(f'Could not find user with "{id}" id')
 
         return User(
-            user[User.idIndex],
-            user[User.usernameIndex],
-            user[User.chatsIndex]
+            user[User.id_index],
+            user[User.username_index],
+            user[User.chats_index]
         )
         
     def save(self, user: User) -> None:
-        self.client.updateOne(
+        self.client.update_one(
             User.collection,
-            { User.idIndex: user.getUserId() },
-            user.toMongoDocument()
+            { User.id_index: user.user_id },
+            user.to_mongo_document()
         )
 
-    def saveByUpdateData(self, data: UpdateData) -> None:
-        self.client.insertOne(
+    def save_by_update_data(self, data: UpdateData) -> None:
+        self.client.insert_one(
             User.collection, 
             {
-                User.idIndex: data.getUserId(),
-                User.usernameIndex: data.getUsername(),
-                User.chatsIndex: [data.getChatId()]
+                User.id_index: data.user_id,
+                User.username_index: data.username,
+                User.chats_index: [data.chat_id]
             }
         )
     
-    def getAllForChat(self, chatId: str) -> Iterable[User]:
+    def get_all_for_chat(self, chat_id: str) -> Iterable[User]:
         result = []
-        users = self.client.findMany(
+        users = self.client.find_many(
             User.collection,
             {
-                User.chatsIndex: {
-                    "$in" : [chatId]
+                User.chats_index: {
+                    "$in" : [chat_id]
                 }
             }
         )
         
         for record in users:
-            result.append(User.fromMongoDocument(record))
+            result.append(User.from_mongo_document(record))
 
         return result
 

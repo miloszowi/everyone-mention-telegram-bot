@@ -8,7 +8,7 @@ from pymongo.database import Database
 
 
 class Client():
-    mongoClient: MongoClient
+    mongo_client: MongoClient
     database: Database
 
     def __init__(self) -> None:
@@ -17,19 +17,19 @@ class Client():
             MONGODB_HOSTNAME, MONGODB_PORT, MONGODB_DATABASE
         )
 
-        self.mongoClient = MongoClient(uri)
-        self.database = self.mongoClient[MONGODB_DATABASE]
+        self.mongo_client = MongoClient(uri)
+        self.database = self.mongo_client[MONGODB_DATABASE]
 
-    def insertOne(self, collection: str, data: dict) -> None:
+    def insert_one(self, collection: str, data: dict) -> None:
         self.database.get_collection(collection).insert_one(data)
 
-    def findOne(self, collection: str, query: dict) -> dict:
+    def find_one(self, collection: str, query: dict) -> dict:
         return self.database.get_collection(collection).find_one(query)
 
-    def findMany(self, collection: str, filter: dict) -> dict:
+    def find_many(self, collection: str, filter: dict) -> dict:
         return self.database.get_collection(collection).find(filter)
 
-    def updateOne(self, collection: str, filter: dict, data: dict) -> None:
+    def update_one(self, collection: str, filter: dict, data: dict) -> None:
         self.database.get_collection(collection).update_one(
             filter, 
             { "$set" : data }

@@ -1,52 +1,40 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Iterable
 
 
+@dataclass
 class User():
-    collection: str = 'users'
-    idIndex: str = '_id'
-    chatsIndex: str = 'chats'
-    usernameIndex: str = 'username'
-
-    userId: str
+    user_id: str
     username: str
     chats: Iterable[str]
 
-    def __init__(self, userId, username, chats) -> None:
-        self.userId = userId
-        self.username = username
-        self.chats = chats
+    collection: str = 'users'
+    id_index: str = '_id'
+    chats_index: str = 'chats'
+    username_index: str = 'username'
 
-    def getUserId(self) -> str:
-        return self.userId
-
-    def getUsername(self) -> str:
-        return self.username
-
-    def getChats(self) -> Iterable[str]:
-        return self.chats
-
-    def isInChat(self, chatId: str) -> bool:
-        return chatId in self.getChats()
+    def is_in_chat(self, chat_id: str) -> bool:
+        return chat_id in self.chats
     
-    def addToChat(self, chatId: str) -> None:
-        self.chats.append(chatId)
+    def add_to_chat(self, chat_id: str) -> None:
+        self.chats.append(chat_id)
 
-    def removeFromChat(self, chatId: str) -> None:
-        if chatId in self.getChats():
-            self.chats.remove(chatId)
+    def remove_from_chat(self, chat_id: str) -> None:
+        if chat_id in self.chats:
+            self.chats.remove(chat_id)
 
-    def toMongoDocument(self) -> dict:
+    def to_mongo_document(self) -> dict:
         return {
-            self.usernameIndex: self.getUsername(),
-            self.chatsIndex: self.getChats()
+            self.username_index: self.username,
+            self.chats_index: self.chats
         }
     
     @staticmethod
-    def fromMongoDocument(mongoDocument: dict) -> User:
+    def from_mongo_document(mongo_document: dict) -> User:
         return User(
-            mongoDocument[User.idIndex],
-            mongoDocument[User.usernameIndex],
-            mongoDocument[User.chatsIndex]
+            mongo_document[User.id_index],
+            mongo_document[User.username_index],
+            mongo_document[User.chats_index]
         )

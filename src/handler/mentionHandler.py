@@ -11,37 +11,37 @@ from handler.abstractHandler import AbstractHandler
 
 
 class MentionHandler(AbstractHandler):
-    botHandler: CommandHandler
-    userRepository: UserRepository
+    bot_handler: CommandHandler
+    user_repository: UserRepository
     silent: str = 'silent'
 
     def __init__(self) -> None:
-        self.botHandler = CommandHandler('everyone', self.handle)
-        self.userRepository = UserRepository()
+        self.bot_handler = CommandHandler('everyone', self.handle)
+        self.user_repository = UserRepository()
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        updateData = self.getUpdateData(update)
-        users = self.userRepository.getAllForChat(updateData.getChatId())
+        updateData = self.get_update_data(update)
+        users = self.user_repository.get_all_for_chat(updateData.chat_id)
         
         if users:
-            self.reply(update, self.buildMentionMessage(users, self.isSilent(context)))
+            self.reply(update, self.build_mention_message(users, self.isSilent(context)))
             return
 
         self.reply(update, mention_failed)
 
-    def getBotHandler(self) -> CommandHandler:
-        return self.botHandler
+    def get_bot_handler(self) -> CommandHandler:
+        return self.bot_handler
 
-    def buildMentionMessage(self, users: Iterable[User], silent: bool = False) -> str:
+    def build_mention_message(self, users: Iterable[User], silent: bool = False) -> str:
         result = ''
 
         for user in users:
             if not silent:
-                result += f'*[{user.getUsername()}](tg://user?id={user.getUserId()})* '
+                result += f'*[{user.username}](tg://user?id={user.user_id})* '
             else:
-                result += f'*{user.getUsername()}\({user.getUserId()}\)*\n'
+                result += f'*{user.username}\({user.user_id}\)*\n'
 
         return result
 
     def isSilent(self, context: CallbackContext) -> bool:
-        return context.args and context.args[0] == self.silent
+        return self.silent in context.args
