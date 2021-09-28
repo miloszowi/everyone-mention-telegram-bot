@@ -14,6 +14,8 @@
     * [`/in`](#in)
     * [`/out`](#out)
     * [`/everyone`](#everyone)
+    * [`/groups`](#groups)
+    * [`/silent`](#silent)
 
 ## Getting started
 
@@ -58,6 +60,11 @@ database.env
 - `MONDODB_LOG_DIR` - path to logs storage 
 ## Commands
 ### `/in`
+```
+/in <group_name>
+```
+(blank `group_name` will assign you to `default` group)
+
 Will sign you in for everyone-mentions.
 
 ![in command example](docs/in_command.png)
@@ -67,6 +74,10 @@ If you have already opted-in before, alternative reply will be displayed.
 ![in command when someone already opted in example](docs/in_command_already_opted_in.png)
 
 ### `/out`
+```
+/out <group_name>
+```
+
 Will sign you off for everyone-mentions.
 
 ![out command example](docs/out_command.png)
@@ -76,11 +87,9 @@ If you haven't opted-in before, alternative reply will be displayed.
 ![out command when someone did not opt in example](docs/out_command_did_not_opt_in_before.png)
 
 ### `/everyone`
-You can also type 
 ```
-/everyone silent
+/everyone <group_id>
 ```
-to list users that opted-in for everyone-mentions but without tagging them.
 Will mention everyone that opted-in for everyone-mentions separated by spaces.
 
 If user does not have nickname, it will first try to assign his firstname, then random firstname from `names` python library
@@ -90,3 +99,14 @@ If user does not have nickname, it will first try to assign his firstname, then 
 If there are no users that opted-in for mentioning, alternative reply will be displayed.
 
 ![everybone noone to mention example](docs/everyone_noone_to_mention.png)
+
+
+### `/groups`
+Will display available groups for this chat as well with members count that opted-in for specific group
+
+### `/silent`
+```
+/silent <group_name>
+```
+
+Will display all users that opted-in but without notyfing them.
