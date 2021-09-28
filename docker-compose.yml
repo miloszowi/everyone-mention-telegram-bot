@@ -3,7 +3,7 @@ version: "3.6"
 services:
 
   database:
-    image: mongo:4.0.8
+    image: mongo:5.0.2
     restart: unless-stopped
     env_file:
       - ./docker/config/database.env

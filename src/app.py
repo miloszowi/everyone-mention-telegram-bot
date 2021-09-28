@@ -3,7 +3,7 @@ from telegram.ext.dispatcher import Dispatcher
 
 from config.credentials import BOT_TOKEN
 from handler.abstractHandler import AbstractHandler
-from handler import (inHandler, mentionHandler, outHandler)
+from handler import (inHandler, mentionHandler, outHandler, silentMentionHandler, groupsHandler)
 
 
 class App:

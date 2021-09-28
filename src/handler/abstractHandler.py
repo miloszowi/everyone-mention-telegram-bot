@@ -14,8 +14,11 @@ class AbstractHandler:
     @abstractmethod
     def handle(self, update: Update, context: CallbackContext) -> None: raise Exception('handle method is not implemented')
 
-    def get_update_data(self, update: Update) -> UpdateData:
-        return UpdateData.create_from_update(update)
+    def get_update_data(self, update: Update, context: CallbackContext) -> UpdateData:
+        return UpdateData.create_from_arguments(update, context)
 
-    def reply(self, update: Update, message: str) -> None:
+    def reply_markdown(self, update: Update, message: str) -> None:
         update.effective_message.reply_markdown_v2(text=message)
+
+    def reply_html(self, update: Update, html: str) -> None:
+        update.effective_message.reply_html(text=html)

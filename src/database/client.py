@@ -1,3 +1,4 @@
+from typing import Optional
 from urllib.parse import quote_plus
 
 from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
@@ -34,3 +35,6 @@ class Client():
             filter, 
             { "$set" : data }
         )
+
+    def aggregate(self, collection, pipeline: list):
+        return self.database.get_collection(collection).aggregate(pipeline)
