@@ -23,7 +23,7 @@ class UpdateData():
         
         if context.args and context.args[0]:
             group_name = str(context.args[0])
-            if not context.args[0].isalpha():
+            if not re.match(r"^[A-Za-z]+$", context.args[0]):
                 raise InvalidArgumentException(re.escape('Group name must contain only letters.'))
 
             if context.args[0] == Group.default_name:
