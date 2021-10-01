@@ -61,6 +61,3 @@ class UserRepository():
             result.append(User.from_mongo_document(record))
 
         return result
-
-    
-

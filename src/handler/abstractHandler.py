@@ -17,6 +17,9 @@ class AbstractHandler:
     def get_update_data(self, update: Update, context: CallbackContext) -> UpdateData:
         return UpdateData.create_from_arguments(update, context)
 
+    def reply(self, update: Update, text: str) -> None:
+        update.effective_message.reply(text=text)
+
     def reply_markdown(self, update: Update, message: str) -> None:
         update.effective_message.reply_markdown_v2(text=message)
 

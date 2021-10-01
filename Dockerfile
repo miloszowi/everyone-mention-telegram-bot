@@ -4,4 +4,3 @@ WORKDIR /src
 
 COPY ./src/requirements.txt /src
 RUN pip install -r ./requirements.txt
-

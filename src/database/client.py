@@ -1,4 +1,3 @@
-from typing import Optional
 from urllib.parse import quote_plus
 
 from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
