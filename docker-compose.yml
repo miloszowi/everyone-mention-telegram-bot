@@ -4,13 +4,14 @@ services:
 
   database:
     image: mongo:5.0.2
+    command: mongod --port $MONGODB_INTERNAL_PORT
     restart: unless-stopped
     env_file:
       - ./docker/config/database.env
     volumes: 
       - db-data:/data/db
     ports:
-      - 27017:27017
+      - $MONGODB_INTERNAL_PORT
     networks:
       - web
 
@@ -22,12 +23,12 @@ services:
     volumes:
       - ./src:/src
     ports:
-      - 9000:9000
+      - $APP_EXPOSED_PORT:$APP_INTERNAL_PORT
     depends_on:
       - database
     networks:
       - web
-    restart: on-failure
+    restart: unless-stopped
 
 networks:
   web:

@@ -1,7 +1,7 @@
 from telegram.ext import Updater
 from telegram.ext.dispatcher import Dispatcher
 
-from config.credentials import BOT_TOKEN
+from config.credentials import BOT_TOKEN, PORT, WEBHOOK_URL
 from handler.abstractHandler import AbstractHandler
 from handler import (inHandler, mentionHandler, outHandler, silentMentionHandler, groupsHandler)
 
@@ -15,8 +15,8 @@ class App:
 
     def run(self) -> None:
         self.register_handlers()
+        self.register_webhook()
         
-        self.updater.start_polling()
         self.updater.idle()
 
     def register_handlers(self) -> None:
@@ -25,6 +25,13 @@ class App:
                 handler().get_bot_handler()
             )
 
+    def register_webhook(self) -> None:
+        self.updater.start_webhook(
+            listen="0.0.0.0",
+            port=int(PORT),
+            url_path=BOT_TOKEN,
+            webhook_url="/".join([WEBHOOK_URL, BOT_TOKEN])
+        )
 
 if __name__ == "__main__":
     app = App()

@@ -29,6 +29,7 @@ git clone https://github.com/miloszowi/everyone-mention-telegram-bot.git
 ```
 after that, you need to copy env files and fulfill it with correct values
 ```bash
+cp .env.local .env
 cp docker/config/app.dist.env docker/config/app.env
 cp docker/config/database.dist.env docker/config/app.env
 ```
@@ -44,15 +45,23 @@ docker/logs <container>
 ```
 to check container logs
 ### Env files
-app.env
+`.env`
+- `MONGODB_INTERNAL_PORT` - Mongodb internal port (should be the same as declared in `app.env`)
+- `APP_INTERNAL_PORT` - App internal port (should be the same as declared in `app.env`)
+- `APP_EXPOSED_PORT` - App exposed port (if you are not using any reverse proxy it should be also the same as declared in `app.env`)
+
+
+`app.env`
 - `BOT_TOKEN` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
+- `WEBHOOK_URL` - url for telegram webhooks (withour the bot token)
+- `PORT` - port used for initializing webhook & app
 - `MONGODB_DATABASE` - MongoDB database name
 - `MONGODB_USERNAME` - MongoDB username
 - `MONGODB_PASSWORD` - MongoDB password
 - `MONGODB_HOSTNAME` - MongoDB host (default `database` - container name)
 - `MONGODB_PORT` - MongoDB port (default `27017` - given in docker-compose configuration)
 
-database.env
+`database.env`
 - `MONGO_INITDB_ROOT_USERNAME` - conf from `app.env`
 - `MONGO_INITDB_ROOT_PASSWORD` - conf from `app.env`
 - `MONGO_INITDB_DATABASE` - conf from `app.env`
