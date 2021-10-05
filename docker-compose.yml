@@ -22,6 +22,7 @@ services:
       - ./docker/config/app.env
     volumes:
       - ./src:/src
+      - ./logs:/var/log/bot
     ports:
       - $APP_EXPOSED_PORT:$APP_INTERNAL_PORT
     depends_on:

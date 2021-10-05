@@ -1,10 +1,12 @@
 from typing import Iterable
 
 from entity.user import User
+from logger import Logger
 from telegram.ext.commandhandler import CommandHandler
 
 from handler.abstractHandler import AbstractHandler
 from handler.mentionHandler import MentionHandler
+from handler.vo.updateData import UpdateData
 
 
 class MentionHandler(MentionHandler, AbstractHandler):
@@ -19,3 +21,6 @@ class MentionHandler(MentionHandler, AbstractHandler):
             result += f'*{user.username}\({user.user_id}\)*\n'
 
         return result
+
+    def log_action(self, update_data: UpdateData) -> None:
+        Logger.info(f'User {update_data.username} called /silent for {update_data.chat_id}')

@@ -1,3 +1,5 @@
+from handler.vo.updateData import UpdateData
+from logger import Logger
 from config.contents import opted_in, opted_in_failed
 from exception.invalidArgumentException import InvalidArgumentException
 from exception.notFoundException import NotFoundException
@@ -31,11 +33,14 @@ class InHandler(AbstractHandler):
 
             user.add_to_chat(update_data.chat_id)
             self.user_repository.save(user)
-            
         except NotFoundException:
             self.user_repository.save_by_update_data(update_data)
 
         self.reply_markdown(update, opted_in)
+        self.log_action(update_data)
 
     def get_bot_handler(self) -> CommandHandler:
         return self.bot_handler
+
+    def log_action(self, update_data: UpdateData) -> None:
+        Logger.info(f'User {update_data.username} joined {update_data.chat_id}')

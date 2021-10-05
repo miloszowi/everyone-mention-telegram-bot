@@ -18,21 +18,21 @@ class UpdateData():
     username: str
 
     @staticmethod
-    def create_from_arguments(update: Update, context: CallbackContext) -> UpdateData:
+    def create_from_arguments(update: Update, context: CallbackContext, include_group: bool = True) -> UpdateData:
         chat_id = str(update.effective_chat.id)
         
-        if context.args and context.args[0]:
-            group_name = str(context.args[0])
-            if not re.match(r"^[A-Za-z]+$", context.args[0]):
+        if context.args and context.args[0] and include_group:
+            group_name = str(context.args[0]).lower()
+            if not re.match(r"^[A-Za-z]+$", group_name):
                 raise InvalidArgumentException(re.escape('Group name must contain only letters.'))
 
-            if context.args[0] == Group.default_name:
+            if group_name == Group.default_name:
                 raise InvalidArgumentException(re.escape(f'Group can not be `{Group.default_name}`.'))
 
-            if len(context.args[0]) > 20:
+            if len(group_name) > 20:
                 raise InvalidArgumentException(re.escape(f'Group name length can not be greater than 20.'))
 
-            chat_id += f'~{context.args[0]}'.lower()
+            chat_id += f'~{group_name}'
             
 
         user_id = str(update.effective_user.id)
