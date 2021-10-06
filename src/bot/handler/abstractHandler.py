@@ -1,11 +1,11 @@
 from abc import abstractmethod
 
+from bot.message.messageData import MessageData
 from logger import Logger
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.handler import Handler
 from telegram.update import Update
-
-from handler.vo.updateData import UpdateData
+from telegram.utils.helpers import mention_markdown
 
 
 class AbstractHandler: 
@@ -16,10 +16,13 @@ class AbstractHandler:
     def handle(self, update: Update, context: CallbackContext) -> None: raise Exception('handle method is not implemented')
 
     @abstractmethod
-    def log_action(self, update_data: UpdateData) -> None: raise Exception('log_action method is not implemented')
+    def log_action(self, message_data: MessageData) -> None: raise Exception('log_action method is not implemented')
 
-    def get_update_data(self, update: Update, context: CallbackContext) -> UpdateData:
-        return UpdateData.create_from_arguments(update, context)
+    def interpolate_reply(self, reply: str, message_data: MessageData):
+        return reply.format(
+            mention_markdown(message_data.user_id, message_data.username),
+            message_data.group_name
+        )
 
     def reply_markdown(self, update: Update, message: str) -> None:
         try:

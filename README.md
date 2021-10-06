@@ -1,121 +1,117 @@
 # <p align="center"> [everyone-mention-telegram-bot](http://t.me/everyone_mention_bot)
 <p align="center"> <img src="docs/logo.png" width="150"/>
-<p align="center"> simple, but useful telegram bot to gather all of group members attention!
 <!-- Icon made by https://www.freepik.com from https://www.flaticon.com/ -->
 
 # Contents
 
+* [Description](#description)
 * [Getting started.](#getting-started)
     * [Requirements](#requirements)
     * [Installation](#installation)
     * [Logs](#logs)
     * [Env files](#env-files)
 * [Commands](#commands)
-    * [`/in`](#in)
-    * [`/out`](#out)
+    * [`/join`](#join)
+    * [`/leave`](#leave)
     * [`/everyone`](#everyone)
     * [`/groups`](#groups)
     * [`/silent`](#silent)
+    * [`/start`](#start)
+## Description
+Everyone Mention Bot is simple, but useful telegram bot to gather group members attention.
+
+You can create groups per chat to mention every user that joined the group by calling one command instead of mentioning them one by one.
 
 ## Getting started
-
 ### Requirements
 - `docker-compose` in version `1.25.0`
 - `docker` in version `20.10.7`
 
 ### Installation
+- copy the repository 
 ```bash
 git clone https://github.com/miloszowi/everyone-mention-telegram-bot.git
 ```
-after that, you need to copy env files and fulfill it with correct values
+- copy environment files and fulfill empty values
 ```bash
 cp .env.local .env
 cp docker/config/app.dist.env docker/config/app.env
 cp docker/config/database.dist.env docker/config/app.env
 ```
-and finally, you can run the bot by launching docker containers
+- start the project (`-d` flag will run containers in detached mode)
 ```bash
 docker-compose up -d
 ```
-(`-d` flag will run containers in detached mode)
 ### Logs
-You can use
 ```bash
 docker/logs <container>
 ```
-to check container logs
 ### Env files
-`.env`
-- `MONGODB_INTERNAL_PORT` - Mongodb internal port (should be the same as declared in `app.env`)
-- `APP_INTERNAL_PORT` - App internal port (should be the same as declared in `app.env`)
-- `APP_EXPOSED_PORT` - App exposed port (if you are not using any reverse proxy it should be also the same as declared in `app.env`)
+- `.env`
+  - `MONGODB_INTERNAL_PORT` - Mongodb internal port (should be the same as declared in `app.env`)
+  - `APP_INTERNAL_PORT` - App internal port (should be the same as declared in `app.env`)
+  - `APP_EXPOSED_PORT` - App exposed port (if you are not using any reverse proxy it should be also the same as declared in `app.env`)
 
 
-`app.env`
-- `BOT_TOKEN` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
-- `WEBHOOK_URL` - url for telegram webhooks (withour the bot token)
-- `PORT` - port used for initializing webhook & app
-- `MONGODB_DATABASE` - MongoDB database name
-- `MONGODB_USERNAME` - MongoDB username
-- `MONGODB_PASSWORD` - MongoDB password
-- `MONGODB_HOSTNAME` - MongoDB host (default `database` - container name)
-- `MONGODB_PORT` - MongoDB port (default `27017` - given in docker-compose configuration)
+- `app.env`
+  - `BOT_TOKEN` - your telegram bot token from [BotFather](https://telegram.me/BotFather)
+  - `WEBHOOK_URL` - url for telegram webhooks (withour the bot token)
+  - `PORT` - port used for initializing webhook & app
+  - `MONGODB_DATABASE` - MongoDB database name
+  - `MONGODB_USERNAME` - MongoDB username
+  - `MONGODB_PASSWORD` - MongoDB password
+  - `MONGODB_HOSTNAME` - MongoDB host (default `database` - container name)
+  - `MONGODB_PORT` - MongoDB port (default `27017` - given in docker-compose configuration)
 
-`database.env`
-- `MONGO_INITDB_ROOT_USERNAME` - conf from `app.env`
-- `MONGO_INITDB_ROOT_PASSWORD` - conf from `app.env`
-- `MONGO_INITDB_DATABASE` - conf from `app.env`
-- `MONGODB_DATA_DIR` - directory to store MongoDB documents (inside a container)
-- `MONDODB_LOG_DIR` - path to logs storage 
+- `database.env`
+  - `MONGO_INITDB_ROOT_USERNAME` - conf from `app.env`
+  - `MONGO_INITDB_ROOT_PASSWORD` - conf from `app.env`
+  - `MONGO_INITDB_DATABASE` - conf from `app.env`
+  - `MONGODB_DATA_DIR` - directory to store MongoDB documents (inside a container)
+  - `MONDODB_LOG_DIR` - path to logs storage 
 ## Commands
-### `/in`
+### `/join`
 ```
-/in <group_name>
+/join <group_name>
 ```
-(blank `group_name` will assign you to `default` group)
+Joins the group (and create if it did not exist before) given in message (`default` if not given)
 
-Will sign you in for everyone-mentions.
+![join command example](docs/join.png)
 
-![in command example](docs/in_command.png)
-
-If you have already opted-in before, alternative reply will be displayed.
-
-![in command when someone already opted in example](docs/in_command_already_opted_in.png)
-
-### `/out`
+### `/leave`
 ```
-/out <group_name>
+/leave <group_name>
 ```
 
-Will sign you off for everyone-mentions.
+Leaves the group given in message (`default` if not given)
 
-![out command example](docs/out_command.png)
-
-If you haven't opted-in before, alternative reply will be displayed.
-
-![out command when someone did not opt in example](docs/out_command_did_not_opt_in_before.png)
+![leave command example](docs/leave.png)
 
 ### `/everyone`
 ```
 /everyone <group_id>
 ```
-Will mention everyone that opted-in for everyone-mentions separated by spaces.
+Will mention every member of given group (`default` if not given).
 
 If user does not have nickname, it will first try to assign his firstname, then random firstname from `names` python library
 
-![everybody command example](docs/everyone_command.png)
-
-If there are no users that opted-in for mentioning, alternative reply will be displayed.
-
-![everybone noone to mention example](docs/everyone_noone_to_mention.png)
-
+![everyone command example](docs/everyone.png)
 
 ### `/groups`
-Will display available groups for this chat as well with members count that opted-in for specific group
+Will display available groups for this chat as well with members count.
+
+![groups command example](docs/groups.png)
 
 ### `/silent`
 ```
 /silent <group_name>
 ```
 
-Will display all users that opted-in but without notyfing them.
+Will display all every member of given group (`default` if not given) but without notyfing them.
+
+![silent command example](docs/silent.png)
+
+### `/start`
+Start & Help message
+
+![start command example](docs/start.png)

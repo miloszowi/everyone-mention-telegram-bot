@@ -1,9 +1,9 @@
 from typing import Iterable, Optional
 
+from bot.message.messageData import MessageData
 from database.client import Client
 from entity.user import User
 from exception.notFoundException import NotFoundException
-from handler.vo.updateData import UpdateData
 
 
 class UserRepository():
@@ -36,7 +36,7 @@ class UserRepository():
             user.to_mongo_document()
         )
 
-    def save_by_update_data(self, data: UpdateData) -> None:
+    def save_by_message_data(self, data: MessageData) -> None:
         self.client.insert_one(
             User.collection, 
             {

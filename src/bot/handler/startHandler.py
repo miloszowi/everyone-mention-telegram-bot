@@ -4,8 +4,8 @@ from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
 
-from handler.abstractHandler import AbstractHandler
-from handler.vo.updateData import UpdateData
+from bot.handler.abstractHandler import AbstractHandler
+from bot.message.messageData import MessageData
 
 
 class StartHandler(AbstractHandler):
@@ -16,10 +16,10 @@ class StartHandler(AbstractHandler):
 
     def handle(self, update: Update, context: CallbackContext) -> None:
         self.reply_markdown(update, start_text)
-        self.log_action(UpdateData.create_from_arguments(update, context))
+        self.log_action(MessageData.create_from_arguments(update, context))
 
     def get_bot_handler(self) -> CommandHandler:
         return self.bot_handler
 
-    def log_action(self, update_data: UpdateData) -> None:
-        Logger.info(f'User {update_data.username} called /start for {update_data.chat_id}')
+    def log_action(self, message_data: MessageData) -> None:
+        Logger.info(f'User {message_data.username} called /start for {message_data.chat_id}')
