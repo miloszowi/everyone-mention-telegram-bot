@@ -1,26 +1,27 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 import names
+from entity.group import Group
+from exception.invalidArgumentException import InvalidArgumentException
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
-from entity.group import Group
-
-from exception.invalidArgumentException import InvalidArgumentException
 
 
 @dataclass
-class UpdateData():
+class MessageData():
     user_id: str
     chat_id: str
+    group_name: str
     username: str
 
     @staticmethod
-    def create_from_arguments(update: Update, context: CallbackContext, include_group: bool = True) -> UpdateData:
+    def create_from_arguments(update: Update, context: CallbackContext, include_group: bool = True) -> MessageData:
         chat_id = str(update.effective_chat.id)
-        
+        group_name = Group.default_name
+
         if context.args and context.args[0] and include_group:
             group_name = str(context.args[0]).lower()
             if not re.match(r"^[A-Za-z]+$", group_name):
@@ -41,4 +42,4 @@ class UpdateData():
         if not username:
             username = names.get_first_name()
 
-        return UpdateData(user_id, chat_id, username)
+        return MessageData(user_id, chat_id, group_name, username)

@@ -5,9 +5,9 @@ from telegram.ext.dispatcher import Dispatcher
 
 from logger import Logger
 from config.credentials import BOT_TOKEN, PORT, WEBHOOK_URL
-from handler import (groupsHandler, inHandler, mentionHandler, outHandler,
+from bot.handler import (groupsHandler, joinHandler, mentionHandler, leaveHandler,
                      silentMentionHandler, startHandler)
-from handler.abstractHandler import AbstractHandler
+from bot.handler.abstractHandler import AbstractHandler
 
 
 class App:

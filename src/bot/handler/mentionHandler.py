@@ -1,16 +1,17 @@
 from typing import Iterable
 
+from telegram.utils.helpers import mention_markdown
+
+from bot.handler.abstractHandler import AbstractHandler
+from bot.message.messageData import MessageData
 from config.contents import mention_failed
 from entity.user import User
 from exception.invalidArgumentException import InvalidArgumentException
-from handler.vo.updateData import UpdateData
 from logger import Logger
 from repository.userRepository import UserRepository
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
-
-from handler.abstractHandler import AbstractHandler
 
 
 class MentionHandler(AbstractHandler):
@@ -23,28 +24,24 @@ class MentionHandler(AbstractHandler):
 
     def handle(self, update: Update, context: CallbackContext) -> None:
         try:
-            update_data = self.get_update_data(update, context)
+            message_data = MessageData.create_from_arguments(update, context)
         except InvalidArgumentException as e:
             return self.reply_markdown(update, str(e))
         
-        users = self.user_repository.get_all_for_chat(update_data.chat_id)
+        users = self.user_repository.get_all_for_chat(message_data.chat_id)
         
         if users:
             self.reply_markdown(update, self.build_mention_message(users))
-            return self.log_action(update_data)
+            return self.log_action(message_data)
 
         self.reply_markdown(update, mention_failed)
 
     def get_bot_handler(self) -> CommandHandler:
         return self.bot_handler
 
-    def log_action(self, update_data: UpdateData) -> None:
-        Logger.info(f'User {update_data.username} called /everyone for {update_data.chat_id}')
+    def log_action(self, message_data: MessageData) -> None:
+        Logger.info(f'User {message_data.username} called /everyone for {message_data.chat_id}')
 
     def build_mention_message(self, users: Iterable[User]) -> str:
-        result = ''
+        return ' '.join([mention_markdown(user.user_id, user.username) for user in users])
 
-        for user in users:
-            result += f'*[{user.username}](tg://user?id={user.user_id})* '
-
-        return result
