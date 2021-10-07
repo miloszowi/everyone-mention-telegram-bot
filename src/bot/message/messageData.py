@@ -9,6 +9,8 @@ from exception.invalidArgumentException import InvalidArgumentException
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 
+from validator.groupNameValidator import GroupNameValidator
+
 
 @dataclass
 class MessageData():
@@ -24,16 +26,11 @@ class MessageData():
 
         if context.args and context.args[0] and include_group:
             group_name = str(context.args[0]).lower()
-            if not re.match(r"^[A-Za-z]+$", group_name):
-                raise InvalidArgumentException(re.escape('Group name must contain only letters.'))
 
-            if group_name == Group.default_name:
-                raise InvalidArgumentException(re.escape(f'Group can not be `{Group.default_name}`.'))
+            GroupNameValidator.validate(group_name)
 
-            if len(group_name) > 20:
-                raise InvalidArgumentException(re.escape(f'Group name length can not be greater than 20.'))
-
-            chat_id += f'~{group_name}'
+            if group_name is not Group.default_name:
+                chat_id += f'~{group_name}'
             
 
         user_id = str(update.effective_user.id)

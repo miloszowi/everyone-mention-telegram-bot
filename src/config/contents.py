@@ -29,4 +29,7 @@ To see all available groups use:
 
 To display all members in a group:
 `/silent <group-name>`
+
+You can also try to tag me @everyone\_mention\_bot and then enter group name
+Possible results will be displayed
 """
