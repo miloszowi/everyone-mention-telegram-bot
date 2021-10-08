@@ -1,27 +1,21 @@
-from logging import Logger
-import logging
 from telegram.ext import Updater
 from telegram.ext.dispatcher import Dispatcher
 
-from logger import Logger
-from config.credentials import BOT_TOKEN, PORT, WEBHOOK_URL
-from bot.handler import (groupsHandler, joinHandler, mentionHandler, leaveHandler,
-                     silentMentionHandler, startHandler, inlineQueryHandler)
+from bot.handler import *
 from bot.handler.abstractHandler import AbstractHandler
+from config.credentials import BOT_TOKEN, PORT, WEBHOOK_URL
+from logger import Logger
 
 
 class App:
     updater: Updater
     dispatcher: Dispatcher
 
-    log_file: str = '/var/log/bot.log'
-    log_format: str = '%(levelname)s-%(asctime)s: %(message)s'
-
     def __init__(self):
         self.updater = Updater(BOT_TOKEN)
 
     def run(self) -> None:
-        self.setup_logging()
+        Logger.register()
         self.register_handlers()
         self.register_webhook()
         
@@ -29,9 +23,7 @@ class App:
 
     def register_handlers(self) -> None:
         for handler in AbstractHandler.__subclasses__():
-            self.updater.dispatcher.add_handler(
-                handler().get_bot_handler()
-            )
+            self.updater.dispatcher.add_handler(handler().bot_handler)
 
     def register_webhook(self) -> None:
         self.updater.start_webhook(
@@ -41,15 +33,9 @@ class App:
             webhook_url="/".join([WEBHOOK_URL, BOT_TOKEN])
         )
 
-        Logger.get_logger(Logger.action_logger).info(
-            f'Webhook configured, listening on {WEBHOOK_URL}/<bot-token>'
-        )
+        Logger.info(f'Webhook configured, listening on {WEBHOOK_URL}/<bot-token>')
 
-    def setup_logging(self) -> None:
-        logger = Logger()
-        logger.setup()
 
 if __name__ == "__main__":
     app = App()
-
     app.run()

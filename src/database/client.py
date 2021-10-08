@@ -1,13 +1,14 @@
 from urllib.parse import quote_plus
 
-from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
-                                MONGODB_PASSWORD, MONGODB_PORT,
-                                MONGODB_USERNAME)
 from pymongo import MongoClient
 from pymongo.database import Database
 
+from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
+                                MONGODB_PASSWORD, MONGODB_PORT,
+                                MONGODB_USERNAME)
 
-class Client():
+
+class Client:
     mongo_client: MongoClient
     database: Database
 
@@ -32,7 +33,7 @@ class Client():
     def update_one(self, collection: str, filter: dict, data: dict) -> None:
         self.database.get_collection(collection).update_one(
             filter, 
-            { "$set" : data }
+            {"$set": data}
         )
 
     def aggregate(self, collection, pipeline: list):

@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 ## [UNRELEASED] - 07.10.2021
 ### Added
 - Inline Query for join/leave/everyone
-- Validator class for group name
+- Group name validator
+- Banned users env
+- Access validator
+- ActionNotAllowedException
+
+### Changed
+- code quality improvements
+
+### Deleted
+- `/silent` command
 
 ### Updated
 - start command content

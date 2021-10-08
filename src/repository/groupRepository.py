@@ -1,13 +1,13 @@
-import itertools
 import re
 from typing import Iterable
 
 from database.client import Client
 from entity.group import Group
 from entity.user import User
+from exception.notFoundException import NotFoundException
 
 
-class GroupRepository():
+class GroupRepository:
     client: Client
 
     count: str = 'count'
@@ -19,22 +19,22 @@ class GroupRepository():
         groups = self.client.aggregate(
             User.collection,
             [
-                { "$unwind": f'${User.chats_index}' },
+                {"$unwind": f'${User.chats_index}'},
                 {
                     "$match": {
-                        User.chats_index: { "$regex": re.compile(f'^{chat_id}.*$') },
+                        User.chats_index: {"$regex": re.compile(f'^{chat_id}.*$')},
                     },
                 },
                 {
                     "$group": {
                         "_id": {
-                            "$last": { "$split": [f'${User.chats_index}', "~"] },
+                            "$last": {"$split": [f'${User.chats_index}', "~"]},
                         },
-                        self.count: { "$count": {} },
+                        self.count: {"$count": {}},
                     },
                 },
                 {
-                    "$sort": { '_id': 1 }
+                    "$sort": {'_id': 1}
                 }
             ]
         )
@@ -49,5 +49,8 @@ class GroupRepository():
             result.append(
                 Group(chat_id, group_name, group[self.count])
             )
+
+        if not groups:
+            raise NotFoundException
 
         return result

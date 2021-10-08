@@ -5,7 +5,6 @@ not_left = '{} did not join group `{}` before'
 mention_failed = 'There are no users to mention'
 no_groups = 'There are no groups for this chat'
 
-
 start_text = """
 Hello there
 I am @everyone\_mention\_bot

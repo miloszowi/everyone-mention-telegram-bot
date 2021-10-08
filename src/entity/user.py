@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import List
 
 
 @dataclass
-class User():
+class User:
     user_id: str
     username: str
-    chats: Iterable[str]
+    chats: List[str]
 
     collection: str = 'users'
     id_index: str = '_id'

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Group():
+class Group:
     chat_id: str
     group_name: str
     users_count: int

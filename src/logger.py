@@ -3,7 +3,10 @@ from __future__ import annotations
 import logging
 import os
 
+from bot.message.messageData import MessageData
 
+
+# noinspection SpellCheckingInspection
 class Logger:
     action_logger: str = 'action-logger'
     action_logger_file: str = '/var/log/bot/action.log'
@@ -11,9 +14,10 @@ class Logger:
     main_logger: str = 'main-logger'
     main_logger_file: str = '/var/log/bot/app.log'
 
-    formatter: str = logging.Formatter('%(asctime)s[%(levelname)s]: %(message)s')
+    # noinspection SpellCheckingInspection
+    formatter: logging.Formatter = logging.Formatter('%(asctime)s[%(levelname)s]: %(message)s')
 
-    def setup(self) -> None:
+    def __init__(self):
         self.configure(self.action_logger, self.action_logger_file, logging.INFO)
         self.configure(self.main_logger, self.main_logger_file, logging.ERROR)
 
@@ -33,11 +37,21 @@ class Logger:
         logger.addHandler(stream_handler)
 
     @staticmethod
+    def register() -> None:
+        Logger()
+
+    @staticmethod
     def get_logger(logger_name) -> logging.Logger:
         return logging.getLogger(logger_name)
 
+    @staticmethod
     def info(message: str) -> None:
         Logger.get_logger(Logger.action_logger).info(message)
 
+    @staticmethod
     def error(message: str) -> None:
         Logger.get_logger(Logger.main_logger).error(message)
+
+    @staticmethod
+    def action(message_data: MessageData, action: str) -> None:
+        Logger.info(f'User {message_data.username}({message_data.user_id}) called {action.upper()} for {message_data.chat_id}')

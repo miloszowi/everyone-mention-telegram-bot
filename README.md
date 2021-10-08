@@ -15,7 +15,6 @@
     * [`/leave`](#leave)
     * [`/everyone`](#everyone)
     * [`/groups`](#groups)
-    * [`/silent`](#silent)
     * [`/start`](#start)
 ## Description
 Everyone Mention Bot is simple, but useful telegram bot to gather group members attention.
@@ -62,6 +61,7 @@ docker/logs <container>
   - `MONGODB_PASSWORD` - MongoDB password
   - `MONGODB_HOSTNAME` - MongoDB host (default `database` - container name)
   - `MONGODB_PORT` - MongoDB port (default `27017` - given in docker-compose configuration)
+  - `BANNED_USERS` - user ids separated by comma that are not allowed to use the bot
 
 - `database.env`
   - `MONGO_INITDB_ROOT_USERNAME` - conf from `app.env`
@@ -101,16 +101,6 @@ If user does not have nickname, it will first try to assign his firstname, then 
 Will display available groups for this chat as well with members count.
 
 ![groups command example](docs/groups.png)
-
-### `/silent`
-```
-/silent <group_name>
-```
-
-Will display all every member of given group (`default` if not given) but without notyfing them.
-
-![silent command example](docs/silent.png)
-
 ### `/start`
 Start & Help message
 
