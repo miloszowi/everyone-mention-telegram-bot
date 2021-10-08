@@ -50,7 +50,7 @@ class GroupRepository:
                 Group(chat_id, group_name, group[self.count])
             )
 
-        if not groups:
+        if not result:
             raise NotFoundException
 
         return result
