@@ -12,21 +12,21 @@ from validator.groupNameValidator import GroupNameValidator
 
 
 @dataclass
-class MessageData:
+class InboundMessage:
     user_id: str
     chat_id: str
     group_name: str
     username: str
 
     @staticmethod
-    def create_from_arguments(update: Update, context: CallbackContext, include_group: bool = True) -> MessageData:
+    def create(update: Update, context: CallbackContext, group_specific: bool) -> InboundMessage:
         user_id = str(update.effective_user.id)
         AccessValidator.validate(user_id)
 
         chat_id = str(update.effective_chat.id)
         group_name = Group.default_name
 
-        if context.args and context.args[0] and include_group:
+        if context.args and context.args[0] and group_specific:
             group_name = str(context.args[0]).lower()
 
             GroupNameValidator.validate(group_name)
@@ -39,4 +39,4 @@ class MessageData:
         if not username:
             username = names.get_first_name()
 
-        return MessageData(user_id, chat_id, group_name, username)
+        return InboundMessage(user_id, chat_id, group_name, username)

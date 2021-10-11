@@ -1,29 +1,31 @@
-from telegram import Update
+from typing import Optional
+
+from telegram import InlineKeyboardMarkup, Update
 from telegram.utils.helpers import mention_markdown
 
-from bot.message.messageData import MessageData
+from bot.message.inboundMessage import InboundMessage
 from logger import Logger
 
 
 class Replier:
 
     @staticmethod
-    def interpolate(content: str, message_data: MessageData):
+    def interpolate(content: str, inbound_message: InboundMessage):
         return content.format(
-            mention_markdown(message_data.user_id, message_data.username),
-            message_data.group_name
+            mention_markdown(inbound_message.user_id, inbound_message.username),
+            inbound_message.group_name
         )
 
     @staticmethod
-    def markdown(update: Update, message: str) -> None:
+    def markdown(update: Update, message: str, reply_markup: Optional[InlineKeyboardMarkup] = None) -> None:
         try:
-            update.effective_message.reply_markdown_v2(message)
+            update.effective_message.reply_markdown_v2(message, reply_markup=reply_markup)
         except Exception as err:
             Logger.error(str(err))
 
     @staticmethod
-    def html(update: Update, html: str) -> None:
+    def html(update: Update, html: str, reply_markup: Optional[InlineKeyboardMarkup] = None) -> None:
         try:
-            update.effective_message.reply_html(html)
+            update.effective_message.reply_html(html, reply_markup=reply_markup, disable_web_page_preview=True)
         except Exception as err:
             Logger.error(str(err))

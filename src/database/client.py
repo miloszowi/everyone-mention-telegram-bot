@@ -3,9 +3,9 @@ from urllib.parse import quote_plus
 from pymongo import MongoClient
 from pymongo.database import Database
 
-from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
-                                MONGODB_PASSWORD, MONGODB_PORT,
-                                MONGODB_USERNAME)
+from config.envs import (MONGODB_DATABASE, MONGODB_HOSTNAME,
+                         MONGODB_PASSWORD, MONGODB_PORT,
+                         MONGODB_USERNAME)
 
 
 class Client:

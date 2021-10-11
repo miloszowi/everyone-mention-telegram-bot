@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from bot.message.messageData import MessageData
+from bot.message.inboundMessage import InboundMessage
 from database.client import Client
 from entity.user import User
 from exception.notFoundException import NotFoundException
@@ -44,13 +44,13 @@ class UserRepository:
             user.to_mongo_document()
         )
 
-    def save_by_message_data(self, data: MessageData) -> None:
+    def save_by_inbound_message(self, inbound_message: InboundMessage) -> None:
         self.client.insert_one(
             User.collection,
             {
-                User.id_index: data.user_id,
-                User.username_index: data.username,
-                User.chats_index: [data.chat_id]
+                User.id_index: inbound_message.user_id,
+                User.username_index: inbound_message.username,
+                User.chats_index: [inbound_message.chat_id]
             }
         )
 
@@ -67,5 +67,8 @@ class UserRepository:
 
         for record in users:
             result.append(User.from_mongo_document(record))
+
+        if not result:
+            raise NotFoundException
 
         return result

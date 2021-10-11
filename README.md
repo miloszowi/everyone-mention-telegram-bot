@@ -34,8 +34,8 @@ git clone https://github.com/miloszowi/everyone-mention-telegram-bot.git
 - copy environment files and fulfill empty values
 ```bash
 cp .env.local .env
-cp docker/config/app.dist.env docker/config/app.env
-cp docker/config/database.dist.env docker/config/app.env
+cp docker/config/app.env.local docker/config/app.env
+cp docker/config/database.env.local docker/config/app.env
 ```
 - start the project (`-d` flag will run containers in detached mode)
 ```bash

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import os
 
-from bot.message.messageData import MessageData
+from bot.message.inboundMessage import InboundMessage
 
 
 # noinspection SpellCheckingInspection
@@ -41,17 +41,21 @@ class Logger:
         Logger()
 
     @staticmethod
-    def get_logger(logger_name) -> logging.Logger:
+    def get(logger_name: str) -> logging.Logger:
         return logging.getLogger(logger_name)
 
     @staticmethod
     def info(message: str) -> None:
-        Logger.get_logger(Logger.action_logger).info(message)
+        Logger.get(Logger.action_logger).info(message)
 
     @staticmethod
     def error(message: str) -> None:
-        Logger.get_logger(Logger.main_logger).error(message)
+        Logger.get(Logger.main_logger).error(message)
 
     @staticmethod
-    def action(message_data: MessageData, action: str) -> None:
-        Logger.info(f'User {message_data.username}({message_data.user_id}) called {action.upper()} for {message_data.chat_id}')
+    def exception(exception: Exception) -> None:
+        Logger.get(Logger.main_logger).exception(exception)
+
+    @staticmethod
+    def action(inbound: InboundMessage, action: str) -> None:
+        Logger.info(f'User {inbound.username}({inbound.user_id}) called {action.upper()} for {inbound.chat_id}')

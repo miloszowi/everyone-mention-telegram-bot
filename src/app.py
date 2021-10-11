@@ -3,7 +3,7 @@ from telegram.ext.dispatcher import Dispatcher
 
 from bot.handler import *
 from bot.handler.abstractHandler import AbstractHandler
-from config.credentials import BOT_TOKEN, PORT, WEBHOOK_URL
+from config.envs import BOT_TOKEN, PORT, WEBHOOK_URL
 from logger import Logger
 
 

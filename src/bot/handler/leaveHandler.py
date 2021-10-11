@@ -3,7 +3,6 @@ from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
 
 from bot.handler.abstractHandler import AbstractHandler
-from bot.message.messageData import MessageData
 from bot.message.replier import Replier
 from config.contents import left, not_left
 from exception.notFoundException import NotFoundException
@@ -17,21 +16,16 @@ class LeaveHandler(AbstractHandler):
     action: str = 'leave'
 
     def __init__(self) -> None:
-        self.bot_handler = CommandHandler(self.action, self.handle)
+        self.bot_handler = CommandHandler(self.action, self.wrap)
         self.user_repository = UserRepository()
 
     def handle(self, update: Update, context: CallbackContext) -> None:
         try:
-            message_data = MessageData.create_from_arguments(update, context)
-        except Exception as e:
-            return Replier.markdown(update, str(e))
-
-        try:
-            user = self.user_repository.get_by_id_and_chat_id(message_data.user_id, message_data.chat_id)
-            user.remove_from_chat(message_data.chat_id)
+            user = self.user_repository.get_by_id_and_chat_id(self.inbound.user_id, self.inbound.chat_id)
+            user.remove_from_chat(self.inbound.chat_id)
             self.user_repository.save(user)
 
-            Replier.markdown(update, Replier.interpolate(left, message_data))
-            Logger.action(message_data, self.action)
+            Replier.markdown(update, Replier.interpolate(left, self.inbound))
+            Logger.action(self.inbound, self.action)
         except NotFoundException:
-            return Replier.markdown(update, Replier.interpolate(not_left, message_data))
+            return Replier.markdown(update, Replier.interpolate(not_left, self.inbound))

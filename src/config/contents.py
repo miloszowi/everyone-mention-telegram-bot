@@ -1,3 +1,4 @@
+# markdownv2 python-telegram-bot specific
 joined = '{} joined group `{}`'
 not_joined = '{} is already in group `{}`'
 left = '{} left group `{}`'
@@ -5,27 +6,38 @@ not_left = '{} did not join group `{}` before'
 mention_failed = 'There are no users to mention'
 no_groups = 'There are no groups for this chat'
 
+
+# html python-telegram-bot specific
 start_text = """
-Hello there
-I am @everyone\_mention\_bot
-I am here to help you with mass notifies
+Hello!
+@everyone_mention_bot here.
+I am here to help you with multiple user mentions.
 
-Please take a look at available commands
-`<group-name>` is not required, if not given, it is set to `default`
+Using <code>Inline Mode</code> is recommended because <a href="https://core.telegram.org/bots/faq#what-messages-will-my-bot-get">policy of bots with privacy mode enabled</a> says that command trigger is sent (without mentioning the bot) only to the last mentioned bot. So if you do have multiple bots in current chat, I might not receive your command!
 
-To join group:
-`/join <group-name>`
-for example: `/join games`
+Available commands:
+<b>Please note</b>
+<code>{group-name}</code> is not required, <code>default</code> if not given.
 
-To leave group:
-`/leave <group-name>`
+<b>Join</b>
+Joins (or creates if group did not exist before) group.
+<pre>/join {group-name}</pre>
 
-To gather everyone attention use:
-`/everyone <group-name>`
+<b>Leave</b>
+Leaves (or deletes if no other users are left) the group
+<pre>/leave {group-name}</pre>
 
-To see all available groups use:
-`/groups`
+<b>Everyone</b>
+Mentions everyone that joined the group.
+<pre>/everyone {group-name}</pre>
 
-You can also try to tag me @everyone\_mention\_bot and then enter group name
-Possible results will be displayed
+<b>Groups</b>
+Show all created groups in this chat.
+<pre>/groups</pre>
+
+<b>Start</b>
+Show start & help text
+<pre>/start</pre>
+
+Reach out to <a href="https://t.me/miloszowi">Creator</a> in case of any issues/questions regarding my usage.
 """
