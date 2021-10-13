@@ -14,9 +14,6 @@ class Logger:
     main_logger: str = 'main-logger'
     main_logger_file: str = '/var/log/bot/app.log'
 
-    # noinspection SpellCheckingInspection
-    formatter: logging.Formatter = logging.Formatter('%(asctime)s[%(levelname)s]: %(message)s')
-
     def __init__(self):
         self.configure(self.action_logger, self.action_logger_file, logging.INFO)
         self.configure(self.main_logger, self.main_logger_file, logging.ERROR)
@@ -27,10 +24,13 @@ class Logger:
             os.makedirs(directory)
 
         logger = logging.getLogger(logger_name)
+        logger.propagate = False
+
         file_handler = logging.FileHandler(log_file, mode='w')
-        file_handler.setFormatter(self.formatter)
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s', datefmt='%H:%M:%S %Y/%m/%d')
+        file_handler.setFormatter(formatter)
         stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(self.formatter)
+        stream_handler.setFormatter(formatter)
 
         logger.setLevel(level)
         logger.addHandler(file_handler)

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ -f docker/config/app.env ]
+then
+  source docker/config/app.env
+fi
+
+docker-compose exec database mongosh --port $MONGODB_PORT --host $MONGODB_HOSTNAME --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --authenticationDatabase admin $MONGODB_DATABASE
