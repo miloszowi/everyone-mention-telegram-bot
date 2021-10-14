@@ -30,10 +30,11 @@ class Client(metaclass=Singleton):
     def find_many(self, collection: str, filter: dict) -> dict:
         return self.database.get_collection(collection).find(filter)
 
-    def update_one(self, collection: str, filter: dict, data: dict) -> None:
+    def save(self, collection: str, filter: dict, data: dict) -> None:
         self.database.get_collection(collection).update_one(
             filter, 
-            {"$set": data}
+            {"$set": data},
+            upsert=True
         )
 
     def aggregate(self, collection, pipeline: list):

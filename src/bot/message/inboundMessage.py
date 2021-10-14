@@ -6,7 +6,6 @@ import names
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 
-from entity.group import Group
 from validator.accessValidator import AccessValidator
 from validator.groupNameValidator import GroupNameValidator
 
@@ -18,21 +17,20 @@ class InboundMessage:
     group_name: str
     username: str
 
+    default_group: str = 'default'
+
     @staticmethod
     def create(update: Update, context: CallbackContext, group_specific: bool) -> InboundMessage:
         user_id = str(update.effective_user.id)
         AccessValidator.validate(user_id)
 
         chat_id = str(update.effective_chat.id)
-        group_name = Group.default_name
+        group_name = InboundMessage.default_group
 
         if context.args and context.args[0] and group_specific:
             group_name = str(context.args[0]).lower()
 
             GroupNameValidator.validate(group_name)
-
-            if group_name is not Group.default_name:
-                chat_id += f'~{group_name}'
 
         username = update.effective_user.username or update.effective_user.first_name
 

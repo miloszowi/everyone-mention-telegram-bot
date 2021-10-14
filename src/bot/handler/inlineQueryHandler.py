@@ -6,7 +6,7 @@ from telegram.inline.inputtextmessagecontent import InputTextMessageContent
 from telegram.update import Update
 
 from bot.handler.abstractHandler import AbstractHandler
-from entity.group import Group
+from bot.message.inboundMessage import InboundMessage
 from exception.actionNotAllowedException import ActionNotAllowedException
 from validator.accessValidator import AccessValidator
 
@@ -24,8 +24,8 @@ class InlineQueryHandler(AbstractHandler):
             update.inline_query.answer([])
             return
 
-        group_display = update.inline_query.query or Group.default_name
-        group = '' if group_display == Group.default_name else group_display
+        group_display = update.inline_query.query or InboundMessage.default_group
+        group = '' if group_display == InboundMessage.default_group else group_display
 
         results = [
             InlineQueryResultArticle(

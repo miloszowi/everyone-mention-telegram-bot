@@ -7,6 +7,7 @@ from telegram.update import Update
 from bot.message.inboundMessage import InboundMessage
 from bot.message.replier import Replier
 from exception.actionNotAllowedException import ActionNotAllowedException
+from exception.invalidActionException import InvalidActionException
 from exception.invalidArgumentException import InvalidArgumentException
 from logger import Logger
 
@@ -14,6 +15,7 @@ from logger import Logger
 class AbstractHandler:
     bot_handler: Handler
     inbound: InboundMessage
+    action: str
 
     @abstractmethod
     def handle(self, update: Update, context: CallbackContext) -> None:
@@ -25,7 +27,8 @@ class AbstractHandler:
 
             self.inbound = InboundMessage.create(update, context, group_specific)
             self.handle(update, context)
-        except (ActionNotAllowedException, InvalidArgumentException) as e:
+            Logger.action(self.inbound, self.action)
+        except (InvalidActionException, InvalidArgumentException, ActionNotAllowedException) as e:
             Replier.markdown(update, str(e))
         except Exception as e:
             Logger.exception(e)
