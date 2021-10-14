@@ -58,4 +58,4 @@ class Logger:
 
     @staticmethod
     def action(inbound: InboundMessage, action: str) -> None:
-        Logger.info(f'User {inbound.username}({inbound.user_id}) called {action.upper()} for {inbound.chat_id}')
+        Logger.info(f'User {inbound.username}({inbound.user_id}) called {action.upper()} for {inbound.chat_id}({inbound.group_name})')

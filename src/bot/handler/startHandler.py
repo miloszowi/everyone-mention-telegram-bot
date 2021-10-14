@@ -30,7 +30,6 @@ class StartHandler(AbstractHandler):
         )
 
         Replier.html(update, start_text, markup)
-        Logger.action(self.inbound, self.action)
 
     def is_group_specific(self) -> bool:
         return False
