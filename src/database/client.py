@@ -1,24 +1,25 @@
-from urllib.parse import quote_plus
-
-from config.credentials import (MONGODB_DATABASE, MONGODB_HOSTNAME,
-                                MONGODB_PASSWORD, MONGODB_PORT,
-                                MONGODB_USERNAME)
+from __future__ import annotations
 from pymongo import MongoClient
 from pymongo.database import Database
 
+from config.envs import MONGO_CONNECTION_STRING, MONGO_DATABASE
+from decorators.singleton import Singleton
 
-class Client():
+
+class Client(metaclass=Singleton):
     mongo_client: MongoClient
     database: Database
 
-    def __init__(self) -> None:
-        uri = "mongodb://%s:%s@%s:%s/%s?authSource=admin" % (
-            MONGODB_USERNAME, quote_plus(MONGODB_PASSWORD),
-            MONGODB_HOSTNAME, MONGODB_PORT, MONGODB_DATABASE
-        )
+    # allow only 10 minutes on idle, close connection after
+    max_idle_time: int = 10 * (60 * 1000)
 
-        self.mongo_client = MongoClient(uri)
-        self.database = self.mongo_client[MONGODB_DATABASE]
+    def __init__(self) -> None:
+        self.mongo_client = MongoClient(
+            MONGO_CONNECTION_STRING,
+            connect=False,
+            maxIdleTimeMS=self.max_idle_time
+        )
+        self.database = self.mongo_client[MONGO_DATABASE]
 
     def insert_one(self, collection: str, data: dict) -> None:
         self.database.get_collection(collection).insert_one(data)
@@ -29,10 +30,11 @@ class Client():
     def find_many(self, collection: str, filter: dict) -> dict:
         return self.database.get_collection(collection).find(filter)
 
-    def update_one(self, collection: str, filter: dict, data: dict) -> None:
+    def save(self, collection: str, filter: dict, data: dict) -> None:
         self.database.get_collection(collection).update_one(
             filter, 
-            { "$set" : data }
+            {"$set": data},
+            upsert=True
         )
 
     def aggregate(self, collection, pipeline: list):

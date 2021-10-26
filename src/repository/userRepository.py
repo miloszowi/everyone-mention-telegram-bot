@@ -1,63 +1,43 @@
-from typing import Iterable, Optional
-
-from bot.message.messageData import MessageData
-from database.client import Client
+from bot.message.inboundMessage import InboundMessage
 from entity.user import User
 from exception.notFoundException import NotFoundException
+from repository.abstractRepository import AbstractRepository
 
 
-class UserRepository():
-    client: Client
+class UserRepository(AbstractRepository):
+    collection_name: str = 'users'
 
-    def __init__(self) -> None:
-        self.client = Client()
+    def __init__(self):
+        super().__init__()
 
-    def get_by_id(self, id: str) -> User:
-        user = self.client.find_one(
-            User.collection,
+    def provide(self, inbound: InboundMessage) -> User:
+        user = User.from_inbound_message(inbound)
+
+        try:
+            entity = self.get(user.user_id)
+            if entity != user:
+                self.save(user)
+        except NotFoundException:
+            self.save(user)
+
+        return user
+
+    def get(self, user_id: str) -> User:
+        user = self.database_client.find_one(
+            self.collection_name,
             {
-                User.id_index: id
+                User.mongo_user_id_index: user_id
             }
         )
 
         if not user:
-            raise NotFoundException(f'Could not find user with "{id}" id')
+            raise NotFoundException
 
-        return User(
-            user[User.id_index],
-            user[User.username_index],
-            user[User.chats_index]
-        )
-        
+        return User.from_mongo_document(user)
+
     def save(self, user: User) -> None:
-        self.client.update_one(
-            User.collection,
-            { User.id_index: user.user_id },
+        self.database_client.save(
+            self.collection_name,
+            {User.mongo_user_id_index: user.user_id},
             user.to_mongo_document()
         )
-
-    def save_by_message_data(self, data: MessageData) -> None:
-        self.client.insert_one(
-            User.collection, 
-            {
-                User.id_index: data.user_id,
-                User.username_index: data.username,
-                User.chats_index: [data.chat_id]
-            }
-        )
-    
-    def get_all_for_chat(self, chat_id: str) -> Iterable[User]:
-        result = []
-        users = self.client.find_many(
-            User.collection,
-            {
-                User.chats_index: {
-                    "$in" : [chat_id]
-                }
-            }
-        )
-        
-        for record in users:
-            result.append(User.from_mongo_document(record))
-
-        return result

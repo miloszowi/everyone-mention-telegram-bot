@@ -1,45 +1,38 @@
-from bot.handler.abstractHandler import AbstractHandler
-from bot.message.messageData import MessageData
-from config.contents import left, not_left
-from exception.invalidArgumentException import InvalidArgumentException
-from exception.notFoundException import NotFoundException
-from logger import Logger
-from repository.userRepository import UserRepository
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.update import Update
+
+from bot.handler.abstractHandler import AbstractHandler
+from bot.message.replier import Replier
+from config.contents import left, not_left
+from exception.invalidActionException import InvalidActionException
+from repository.userRepository import UserRepository
+from repository.chatRepository import ChatRepository
 
 
 class LeaveHandler(AbstractHandler):
     bot_handler: CommandHandler
     user_repository: UserRepository
+    chat_repository: ChatRepository
+    action: str = 'leave'
 
     def __init__(self) -> None:
-        self.bot_handler = CommandHandler('leave', self.handle)
+        self.bot_handler = CommandHandler(self.action, self.wrap)
         self.user_repository = UserRepository()
+        self.chat_repository = ChatRepository()
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        try:
-            message_data = MessageData.create_from_arguments(update, context)
-        except InvalidArgumentException as e:
-            return self.reply_markdown(update, str(e))
+        user = self.user_repository.provide(self.inbound)
+        chat = self.chat_repository.provide(self.inbound)
+        group = chat.groups.get(self.inbound.group_name)
 
-        try:
-            user = self.user_repository.get_by_id(message_data.user_id)
+        if user.user_id not in group:
+            raise InvalidActionException(Replier.interpolate(not_left, self.inbound))
 
-            if not user.is_in_chat(message_data.chat_id):
-                raise NotFoundException()
-        except NotFoundException:
-            return self.reply_markdown(update, self.interpolate_reply(not_left, message_data))
+        group.remove(user.user_id)
+        if not group:
+            chat.groups.pop(self.inbound.group_name)
 
-        user.remove_from_chat(message_data.chat_id)
-        self.user_repository.save(user)
+        self.chat_repository.save(chat)
 
-        self.reply_markdown(update, self.interpolate_reply(left, message_data))
-        self.log_action(message_data)
-
-    def get_bot_handler(self) -> CommandHandler:
-        return self.bot_handler
-
-    def log_action(self, message_data: MessageData) -> None:
-        Logger.info(f'User {message_data.username} left {message_data.chat_id}')
+        Replier.markdown(update, Replier.interpolate(left, self.inbound))

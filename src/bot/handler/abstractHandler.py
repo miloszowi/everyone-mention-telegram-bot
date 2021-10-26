@@ -1,37 +1,37 @@
 from abc import abstractmethod
 
-from bot.message.messageData import MessageData
-from logger import Logger
+from telegram.ext import Handler
 from telegram.ext.callbackcontext import CallbackContext
-from telegram.ext.handler import Handler
 from telegram.update import Update
-from telegram.utils.helpers import mention_markdown
+
+from bot.message.inboundMessage import InboundMessage
+from bot.message.replier import Replier
+from exception.actionNotAllowedException import ActionNotAllowedException
+from exception.invalidActionException import InvalidActionException
+from exception.invalidArgumentException import InvalidArgumentException
+from logger import Logger
 
 
-class AbstractHandler: 
+class AbstractHandler:
+    bot_handler: Handler
+    inbound: InboundMessage
+    action: str
+
     @abstractmethod
-    def get_bot_handler(self) -> Handler: raise Exception('get_bot_handler method is not implemented')
+    def handle(self, update: Update, context: CallbackContext) -> None:
+        raise Exception('handle method is not implemented')
 
-    @abstractmethod
-    def handle(self, update: Update, context: CallbackContext) -> None: raise Exception('handle method is not implemented')
-
-    @abstractmethod
-    def log_action(self, message_data: MessageData) -> None: raise Exception('log_action method is not implemented')
-
-    def interpolate_reply(self, reply: str, message_data: MessageData):
-        return reply.format(
-            mention_markdown(message_data.user_id, message_data.username),
-            message_data.group_name
-        )
-
-    def reply_markdown(self, update: Update, message: str) -> None:
+    def wrap(self, update: Update, context: CallbackContext) -> None:
         try:
-            update.effective_message.reply_markdown_v2(text=message)
-        except Exception as err:
-            Logger.error(str(err))
+            group_specific = self.is_group_specific()
 
-    def reply_html(self, update: Update, html: str) -> None:
-        try:
-            update.effective_message.reply_html(text=html)
-        except Exception as err:
-            Logger.error(str(err))
+            self.inbound = InboundMessage.create(update, context, group_specific)
+            self.handle(update, context)
+            Logger.action(self.inbound, self.action)
+        except (InvalidActionException, InvalidArgumentException, ActionNotAllowedException) as e:
+            Replier.markdown(update, str(e))
+        except Exception as e:
+            Logger.exception(e)
+
+    def is_group_specific(self) -> bool:
+        return True

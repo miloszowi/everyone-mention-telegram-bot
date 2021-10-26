@@ -1,0 +1,2 @@
+class ActionNotAllowedException(Exception):
+    pass
