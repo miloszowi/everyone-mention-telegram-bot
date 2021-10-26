@@ -4,7 +4,7 @@ from exception.invalidArgumentException import InvalidArgumentException
 
 
 class GroupNameValidator:
-    MAX_GROUP_NAME_LENGTH: int = 20
+    MAX_GROUP_NAME_LENGTH: int = 40
 
     @staticmethod
     def validate(group: str) -> None:

@@ -1,26 +1,101 @@
-# <p align="center"> [everyone-mention-telegram-bot](http://t.me/everyone_mention_bot)
+#<p align="center"> [everyone-mention-telegram-bot](http://t.me/everyone_mention_bot)
 <p align="center"> <img src="docs/logo.png" width="150"/>
 <!-- Icon made by https://www.freepik.com from https://www.flaticon.com/ -->
 
 # Contents
 
 * [Description](#description)
-* [Getting started.](#getting-started)
-    * [Requirements](#requirements)
-    * [Installation](#installation)
-    * [Logs](#logs)
-    * [Env files](#env-files)
 * [Commands](#commands)
     * [`/join`](#join)
     * [`/leave`](#leave)
     * [`/everyone`](#everyone)
     * [`/groups`](#groups)
     * [`/start`](#start)
+    * [Example command flow](#example-command-flow)
+* [Inline Mode](#inline-mode)
+    * [Usage](#usage)
+* [Getting started.](#getting-started)
+    * [Requirements](#requirements)
+    * [Installation](#installation)
+    * [Logs](#logs)
+    * [Env files](#env-files)
 ## Description
 Everyone Mention Bot is simple, but useful telegram bot to gather group members attention.
 
 You can create groups per chat to mention every user that joined the group by calling one command instead of mentioning them one by one.
 
+## Commands
+*Important*: `{group-name}` is not required, if not given, it will be set to `default`.
+### `/join`
+Joins the group (if group did not exist before, it will be created).
+```
+/join {group_name}
+```
+*Examples*
+
+without group name
+
+![join default command example](docs/join_default.png)
+
+with group name
+
+![join group command example](docs/join_group.png)
+
+### `/leave`
+Leaves the group (and deletes if no members are left).
+```
+/leave {group_name}
+```
+*Examples*
+
+without group name
+
+![leave default command example](docs/leave_default.png)
+
+with group name
+
+![leave group command example](docs/leave_group.png)
+
+### `/everyone`
+Mention everyone that joined requested group.
+```
+/everyone {group-name}
+```
+
+*Examples*
+
+without group name
+
+![everyone default command example](docs/everyone_default.png)
+
+with group name
+
+![everyone group command example](docs/everyone_group.png)
+
+
+### `/groups`
+Will display available groups for this chat as well with members count.
+
+![groups command example](docs/groups.png)
+### `/start`
+Start & Help message
+
+![start command example](docs/start.png)
+
+### Example command flow
+![example command flow](docs/flow_command.png)
+
+## Inline Mode
+Using Inline Mode is recommended because policy of bots with privacy mode enabled (https://core.telegram.org/bots/faq#what-messages-will-my-bot-get) says that command trigger is sent (without mentioning the bot) only to the last mentioned bot. So if you do have multiple bots in current chat, I might not receive your command!
+
+### Usage
+To use inline mode, type `@everyone_mention_bot` in telegram message input or click on the `Inline Mode` button from `/start` command.
+
+![inline popup](docs/inline_mode_1.png)
+
+Type in your group name (you can leave it blank for `default` group name), then click on one of the three following options.
+
+![inline answer](docs/inline_mode_2.png)
 ## Getting started
 ### Requirements
 - `docker-compose` in version `1.25.0`
@@ -69,39 +144,3 @@ docker/logs <container>
   - `MONGO_INITDB_DATABASE` - conf from `app.env`
   - `MONGODB_DATA_DIR` - directory to store MongoDB documents (inside a container)
   - `MONDODB_LOG_DIR` - path to logs storage 
-## Commands
-### `/join`
-```
-/join <group_name>
-```
-Joins the group (and create if it did not exist before) given in message (`default` if not given)
-
-![join command example](docs/join.png)
-
-### `/leave`
-```
-/leave <group_name>
-```
-
-Leaves the group given in message (`default` if not given)
-
-![leave command example](docs/leave.png)
-
-### `/everyone`
-```
-/everyone <group_id>
-```
-Will mention every member of given group (`default` if not given).
-
-If user does not have nickname, it will first try to assign his firstname, then random firstname from `names` python library
-
-![everyone command example](docs/everyone.png)
-
-### `/groups`
-Will display available groups for this chat as well with members count.
-
-![groups command example](docs/groups.png)
-### `/start`
-Start & Help message
-
-![start command example](docs/start.png)

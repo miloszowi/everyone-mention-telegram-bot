@@ -1,14 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
  
-## [UNRELEASED] - 11.10.2021
+## [0.2.0] - 26.10.2021
 ### Added
-- Inline Query for `join`, `leave` & `everyone`
-- Banned users
+- Inline Mode for `join`, `leave` & `everyone`
+- Banned users environment variable
 - Buttons for `start` message
 ### Changed
 - Code quality improvements
 - `start` text
+- mongodb data structure
+- group name max length to 40
 ### Deleted
 - `/silent` command
 ## [0.1.0] - 06.10.2021

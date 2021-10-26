@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-docker-compose stop
-docker-compose up -d
-docker logs -f $(docker-compose ps -q app) &> app.log &
