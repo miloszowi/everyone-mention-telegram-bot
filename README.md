@@ -5,6 +5,8 @@
 # Contents
 
 * [Description](#description)
+* [Usage](#usage)
+* [Dynamic Mentioning](#dynamic-mentioning)
 * [Commands](#commands)
     * [`/join`](#join)
     * [`/leave`](#leave)
@@ -12,8 +14,7 @@
     * [`/groups`](#groups)
     * [`/start`](#start)
     * [Example command flow](#example-command-flow)
-* [Inline Mode](#inline-mode)
-    * [Usage](#usage)
+* [Inline Mode Usage](#inline-mode-usage)
 * [Getting started.](#getting-started)
     * [Requirements](#requirements)
     * [Installation](#installation)
@@ -24,6 +25,32 @@ Everyone Mention Bot is simple, but useful telegram bot to gather group members 
 
 You can create groups per chat to mention every user that joined the group by calling one command instead of mentioning them one by one.
 
+## Usage
+First, users need to join the group to let mentioning them, to do that, they simply need to join specific group.
+It can be done in 2 ways:
+- Command [`/join`](#join)
+- [Inline Mode](#inline-mode-usage)
+
+Users that have joined the group can be mentioned in 3 ways:
+- [Dynaminc Mentioning](#dynamic-mentioning) by `@`, for example `@everyone`
+- Command [`/everyone`](#everyone)
+- [Inline Mode](#inline-mode-usage)
+
+To leave the group use one of the two ways:
+- Command [`/leave`](#leave)
+- [Inline Mode](#inline-mode-usage)
+
+To display available groups:
+- Command [`/groups`](#groups)
+
+## Dynamic mentioning
+You can use `@` character (as you would mention a user) to mention specific group.
+
+All the below will mention users from `default` group.
+
+`@all`, `@channel`, `@chat`, `@everyone`, `@group`, `@here`.
+
+If you did create a group named `gaming`, you can simply use `@gaming` in your text to mention them all.
 ## Commands
 *Important*: `{group-name}` is not required, if not given, it will be set to `default`.
 ### `/join`
@@ -85,10 +112,7 @@ Start & Help message
 ### Example command flow
 ![example command flow](docs/flow_command.png)
 
-## Inline Mode
-Using Inline Mode is recommended because policy of bots with privacy mode enabled (https://core.telegram.org/bots/faq#what-messages-will-my-bot-get) says that command trigger is sent (without mentioning the bot) only to the last mentioned bot. So if you do have multiple bots in current chat, I might not receive your command!
-
-### Usage
+### Inline Mode Usage
 To use inline mode, type `@everyone_mention_bot` in telegram message input or click on the `Inline Mode` button from `/start` command.
 
 ![inline popup](docs/inline_mode_1.png)

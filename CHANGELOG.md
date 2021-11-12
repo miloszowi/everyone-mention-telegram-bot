@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
  
+## [0.3.0] - 12.11.2021
+### Added
+- Dynamic mentioning by `@` character
+### Changed
+- `start` text
+- Group name validation - those are forbidden now - `all`, `channel`, `chat`, `everyone`, `group`, `here`
 ## [0.2.0] - 26.10.2021
 ### Added
 - Inline Mode for `join`, `leave` & `everyone`

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import names
+import re
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 
@@ -27,10 +28,19 @@ class InboundMessage:
         chat_id = str(update.effective_chat.id)
         group_name = InboundMessage.default_group
 
+        # done upon resolving a command action
         if context.args and context.args[0] and group_specific:
             group_name = str(context.args[0]).lower()
 
             GroupNameValidator.validate(group_name)
+
+        # done upon resolving a message handler action
+        if '@' in update.message.text:
+            searched_message_part = [part for part in update.message.text.split(' ') if '@' in part][0]
+            group_name = re.sub(r'\W+', '', searched_message_part)
+
+            if group_name in GroupNameValidator.FORBIDDEN_GROUP_NAMES:
+                group_name = InboundMessage.default_group
 
         username = update.effective_user.username or update.effective_user.first_name
 
