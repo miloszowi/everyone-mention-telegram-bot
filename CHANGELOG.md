@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - `start` text
 - Group name validation - those are forbidden now - `all`, `channel`, `chat`, `everyone`, `group`, `here`
+### Deleted
+- mentioning user that performed `/everyone` or dynamic mention in bot response
 ## [0.2.0] - 26.10.2021
 ### Added
 - Inline Mode for `join`, `leave` & `everyone`

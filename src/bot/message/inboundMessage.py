@@ -37,7 +37,7 @@ class InboundMessage:
         # done upon resolving a message handler action
         if '@' in update.message.text:
             searched_message_part = [part for part in update.message.text.split(' ') if '@' in part][0]
-            group_name = re.sub(r'\W+', '', searched_message_part)
+            group_name = re.sub(r'\W+', '', searched_message_part).lower()
 
             if group_name in GroupNameValidator.FORBIDDEN_GROUP_NAMES:
                 group_name = InboundMessage.default_group
