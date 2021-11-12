@@ -35,7 +35,7 @@ class InboundMessage:
             GroupNameValidator.validate(group_name)
 
         # done upon resolving a message handler action
-        if '@' in update.message.text:
+        if '@' in update.message.text and update.message.text[0] != '/':
             searched_message_part = [part for part in update.message.text.split(' ') if '@' in part][0]
             group_name = re.sub(r'\W+', '', searched_message_part).lower()
 
