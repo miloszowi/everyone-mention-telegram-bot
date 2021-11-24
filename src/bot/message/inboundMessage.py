@@ -7,6 +7,7 @@ import re
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 
+from exception.invalidActionException import InvalidActionException
 from validator.accessValidator import AccessValidator
 from validator.groupNameValidator import GroupNameValidator
 
@@ -25,6 +26,9 @@ class InboundMessage:
         user_id = str(update.effective_user.id)
         AccessValidator.validate(user_id)
 
+        if update.edited_message:
+            raise InvalidActionException
+
         chat_id = str(update.effective_chat.id)
         group_name = InboundMessage.default_group
 
@@ -35,7 +39,7 @@ class InboundMessage:
             GroupNameValidator.validate(group_name)
 
         # done upon resolving a message handler action
-        if update.message and '@' in update.message.text and update.message.text[0] != '/':
+        if '@' in update.message.text and update.message.text[0] != '/':
             searched_message_part = [part for part in update.message.text.split(' ') if '@' in part][0]
             group_name = re.sub(r'\W+', '', searched_message_part).lower()
 
