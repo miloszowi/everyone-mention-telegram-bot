@@ -39,12 +39,17 @@ class ChatRepository(AbstractRepository):
 
         return Chat.from_mongo_document(chat)
 
-    def get_users_for_group(self, chat_id: str, group: str) -> Iterable[User]:
-        chat = self.get(chat_id)
-        if not chat.groups.get(group):
+    def get_users_for_group(self, inbound: InboundMessage) -> Iterable[User]:
+        chat = self.get(inbound.chat_id)
+        if not chat.groups.get(inbound.group_name):
             raise NotFoundException
 
-        return [self.user_repository.get(user_id) for user_id in chat.groups.get(group)]
+        users = [self.user_repository.get(user_id) for user_id in chat.groups.get(inbound.group_name) if user_id != inbound.user_id]
+
+        if not users:
+            raise NotFoundException
+
+        return users
 
     def save(self, chat: Chat) -> None:
         self.database_client.save(

@@ -9,6 +9,7 @@ from bot.message.replier import Replier
 from exception.actionNotAllowedException import ActionNotAllowedException
 from exception.invalidActionException import InvalidActionException
 from exception.invalidArgumentException import InvalidArgumentException
+from exception.notFoundException import NotFoundException
 from logger import Logger
 
 
@@ -30,6 +31,8 @@ class AbstractHandler:
             Logger.action(self.inbound, self.action)
         except (InvalidActionException, InvalidArgumentException, ActionNotAllowedException) as e:
             Replier.markdown(update, str(e))
+        except NotFoundException:
+            pass  # probably just mentioning user
         except Exception as e:
             Logger.exception(e)
 

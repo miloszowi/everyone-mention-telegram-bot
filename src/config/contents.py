@@ -10,13 +10,16 @@ no_groups = 'There are no groups for this chat'
 start_text = """
 Hello!
 @everyone_mention_bot here.
-
-<b>Description</b>:
-I <b>do not</b> have access to your messages! 
 I am here to help you with multiple user mentions.
 
 <b>Usage</b>:
-Users that joined the group by <code>/join</code> command, can be mentioned after calling <code>/everyone</code> command.
+Users that joined the group by <code>/join</code> command, 
+can be mentioned after typing one of those in your message: 
+<code>@all</code>, <code>@channel</code>, <code>@chat</code>, <code>@everyone</code>, <code>@group</code> or <code>@here</code>.
+
+If you did create a group named <code>gaming</code>, simply use <code>@gaming</code> to call users from that group.
+
+You can also use <code>/everyone</code> command.
 
 <b>Commands</b>:
 <pre>/join {group-name}</pre>
@@ -36,6 +39,4 @@ Show start & help text
 
 <b>Please note</b>
 <code>{group-name}</code> is not required, <code>default</code> if not given.
-
-If your chat does have multiple bots <b>I might not receive your command</b> according to <a href="https://core.telegram.org/bots/faq#what-messages-will-my-bot-get">policy of bots with privacy mode enabled</a> - use <code>Inline Mode</code> to avoid this.
 """
