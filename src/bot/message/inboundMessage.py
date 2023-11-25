@@ -38,7 +38,7 @@ class InboundMessage:
             GroupNameValidator.validate(group_name)
 
         # done upon resolving a message handler action
-        if '@' in message_content:
+        if '@' in message_content and '@everyone_mention_bot' not in message_content:
             searched_message_part = [part for part in message_content.split(' ') if '@' in part][0]
             group_name = re.sub(r'\W+', '', searched_message_part).lower()
 
