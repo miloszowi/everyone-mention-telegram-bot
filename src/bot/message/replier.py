@@ -18,7 +18,7 @@ class Replier:
         telegramRestrictionCharacters = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']
 
         for character in telegramRestrictionCharacters:
-            formatted.replace(character, "\\" + character)
+            formatted.replace(character, r'\' + character)
 
         return formatted
 
