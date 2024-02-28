@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
  
+## [0.3.1] - 28.02.2023
+### Changed
+- fixed markdown replier to respect restricted characters provided in the [api docs](https://core.telegram.org/bots/api#markdownv2-style)
 ## [0.3.0] - 12.11.2021
 ### Added
 - Dynamic mentioning by `@` character
