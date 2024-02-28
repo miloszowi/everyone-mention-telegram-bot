@@ -27,7 +27,7 @@ class Replier:
         try:
             update.effective_message.reply_markdown_v2(message, reply_markup=reply_markup)
         except Exception as err:
-            Logger.error("replier.markdown error: "str(err))
+            Logger.error("replier.markdown error: " + str(err))
 
     @staticmethod
     def html(update: Update, html: str, reply_markup: Optional[InlineKeyboardMarkup] = None) -> None:

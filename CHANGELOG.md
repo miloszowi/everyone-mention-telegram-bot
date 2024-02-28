@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
- 
+
+## [0.3.2] - 28.02.2023
+### Changed
+- fixed bug with missing '+' in replier
 ## [0.3.1] - 28.02.2023
 ### Changed
 - fixed markdown replier to respect restricted characters provided in the [api docs](https://core.telegram.org/bots/api#markdownv2-style)
