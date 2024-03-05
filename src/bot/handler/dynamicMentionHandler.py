@@ -23,7 +23,7 @@ class DynamicMentionHandler(AbstractHandler):
         self.chat_repository = ChatRepository()
 
     def handle(self, update: Update, context: CallbackContext) -> None:
-        if update.message_reaction is not None:
+        if hasattr(update, 'message_reaction'):
             return
         
         users = self.chat_repository.get_users_for_group(self.inbound)
